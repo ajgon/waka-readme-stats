@@ -121,10 +121,11 @@ async def init_download_manager(user_login: str):
 
     :param user_login: GitHub user login.
     """
+    actual_base_url = f"{EM.WAKATIME_API_URL}/api/" if "wakatime.com" in EM.WAKATIME_API_URL else f"{EM.WAKATIME_API_URL}/api/compat/wakatime/"
     await DownloadManager.load_remote_resources(
         linguist="https://cdn.jsdelivr.net/gh/github/linguist@master/lib/linguist/languages.yml",
-        waka_latest=f"https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key={EM.WAKATIME_API_KEY}",
-        waka_all=f"https://wakatime.com/api/v1/users/current/all_time_since_today?api_key={EM.WAKATIME_API_KEY}",
+        waka_latest=f"{EM.WAKATIME_API_URL}/api/v1/users/current/stats/last_7_days?api_key={EM.WAKATIME_API_KEY}",
+        waka_all=f"{actual_base_url}/v1/users/current/all_time_since_today?api_key={EM.WAKATIME_API_KEY}",
         github_stats=f"https://github-contributions.vercel.app/api/v1/{user_login}",
     )
 
@@ -184,6 +185,8 @@ class DownloadManager:
         else:
             res = DownloadManager._REMOTE_RESOURCES_CACHE[resource]
             DBM.g(f"\tQuery '{resource}' loaded from cache!")
+        DBM.g(f"\tURL: {res.url}")
+        DBM.g(f"\tStatus: {res.status_code}")
         if res.status_code == 200:
             if convertor is None:
                 return res.json()
