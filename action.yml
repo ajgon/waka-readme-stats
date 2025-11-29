@@ -159,7 +159,7 @@ inputs:
 
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/ajgon/waka-readme-stats:master'
+  image: 'docker://ghcr.io/ajgon/waka-readme-stats:master@sha256:d6fc5fe30c08bb4afe272171d9affb6826ecf0c09cde28d4cafff13899a075a5'
 
 branding:
   icon: 'activity'
